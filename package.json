@@ -1,0 +1,38 @@
+{
+  "name": "react-pixi-fiber-carousel",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+    "@pixi/display": "6.0.2",
+    "@pixi/interaction": "6.0.2",
+    "@pixi/math": "6.0.2",
+    "@pixi/ticker": "6.0.2",
+    "pixi-viewport": "4.30.4",
+    "pixi.js": "6.0.2",
+    "prop-types": "^15.7.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-pixi-fiber": "0.14.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "react-scripts": "latest"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
