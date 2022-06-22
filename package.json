@@ -12,7 +12,8 @@
     "prop-types": "^15.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-pixi-fiber": "0.14.2"
+    "react-pixi-fiber": "0.14.2",
+    "typescript": "^4.7.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -20,8 +21,21 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "devDependencies": {
-    "react-scripts": "latest"
+    "@types/react": "^18.0.14",
+    "react-scripts": "latest",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-react-hooks": "^2.5.1",
+    "prettier": "2.0.3"
   },
   "browserslist": {
     "production": [
