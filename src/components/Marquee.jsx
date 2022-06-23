@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { usePixiApp } from 'react-pixi-fiber';
 import { useCarousel } from 'carousel/Carousel.hooks';
-import { Wrapper, Carousel, Slot } from 'carousel/CarouselComponents';
+import { Wrapper, Carousel, Slot } from 'carousel/Carousel.components';
 
 const Marquee = ({ x, y, width, height, interval, showNav, data }) => {
   const { renderSlides, moveAmountX } = useCarousel({
@@ -14,6 +15,9 @@ const Marquee = ({ x, y, width, height, interval, showNav, data }) => {
     showNav,
     slideComponent: Slot,
   });
+  const { screen } = usePixiApp();
+  const { width: screenWidth } = screen;
+  console.log('@@ screenWidth', screenWidth);
 
   return (
     <Wrapper width={width} height={height} position={[x, y]}>

@@ -27,7 +27,7 @@ export const App = () => {
         resolution: window.devicePixelRatio || 1,
       }}
     >
-      <Marquee x={0} y={50} width={500} height={100} data={data.current} />
+      <Marquee x={0} y={50} width={width} height={100} data={data.current} />
     </Stage>
   );
 };

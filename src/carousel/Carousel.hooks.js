@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef, useReducer } from 'react';
 import { usePixiTicker } from 'react-pixi-fiber';
-import { PREV, NEXT, INDEX } from 'carousel/CarouselComponents';
-import styles from 'carousel/CarouselComponents.module.scss';
+import { PREV, NEXT, INDEX } from 'carousel/Carousel.components';
+import styles from 'carousel/Carousel.components.module.scss';
 
 const initialState = { pos: 0, sliding: false, dir: NEXT };
 

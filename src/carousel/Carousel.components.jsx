@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Sprite, Text } from 'react-pixi-fiber';
 import { TextStyle, Point, Texture } from 'pixi.js';
 // import classNames from 'classnames';
-// import styles from 'carousel/CarouselComponents.module.scss';
+// import styles from 'carousel/Carousel.components.module.scss';
 
 export const NEXT = 'NEXT';
 export const PREV = 'PREV';
@@ -17,8 +17,8 @@ export const Wrapper = (props) => {
 
   return (
     <Container {...props}>
+      {/* Background color */}
       <Sprite
-        // anchor={new Point(0.5, 0.5)}
         x={props.position[0]}
         y={props.position[1]}
         width={props.width}
