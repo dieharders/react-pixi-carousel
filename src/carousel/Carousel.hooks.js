@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer } from 'react';
-import { PREV, NEXT, INDEX } from 'CarouselComponents';
-import styles from 'Carousel.module.scss';
+import { PREV, NEXT, INDEX } from 'carousel/CarouselComponents';
+import styles from 'carousel/CarouselComponents.module.scss';
 
 const initialState = { pos: 0, sliding: false, dir: NEXT };
 

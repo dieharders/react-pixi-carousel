@@ -7,7 +7,7 @@ import {
   PointLikeTuple,
   // usePixiApp,
 } from 'react-pixi-fiber';
-import Poster from 'Poster';
+import Poster from 'components/Poster';
 
 type T_ComponentProps = {
   x: number;

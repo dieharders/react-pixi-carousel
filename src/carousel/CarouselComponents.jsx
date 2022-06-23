@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import styles from 'CarouselComponents.module.scss';
+import styles from 'carousel/CarouselComponents.module.scss';
 
 export const NEXT = 'NEXT';
 export const PREV = 'PREV';
@@ -10,7 +10,7 @@ export const Wrapper = ({ width }) => {
   return <div className={classNames(styles.wrapper)} style={wrapperStyle}></div>;
 };
 
-export const CarouselContainer = ({ width, sliding, children, dir }) => {
+export const Carousel = ({ width, sliding, children, dir }) => {
   const calcTransform = () => {
     if (children.length <= 1) return 'translateX(0%)';
     if (!sliding) return 'translateX(-100%)';
@@ -19,16 +19,16 @@ export const CarouselContainer = ({ width, sliding, children, dir }) => {
     if (dir === PREV) return 'translateX(-200%)';
     return 'translateX(-100%)';
   };
-  const containerStyle = {
+  const carouselStyle = {
     width,
     transition: sliding ? 'none' : 'transform 400ms ease',
     transform: calcTransform(),
   };
 
-  return <div className={classNames(styles.container)} style={containerStyle}></div>;
+  return <div className={classNames(styles.container)} style={carouselStyle}></div>;
 };
 
-export const CarouselSlot = ({ width, height, order }) => {
+export const Slot = ({ width, height, order }) => {
   const slotStyle = { width, height, order, '-webkit-order': order };
   return <div style={slotStyle}></div>;
 };

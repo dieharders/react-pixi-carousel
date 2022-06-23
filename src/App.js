@@ -2,10 +2,10 @@
 import React from 'react';
 import { Viewport as PixiViewport } from 'pixi-viewport';
 import * as PIXI from 'pixi.js';
-import Carousel from 'Carousel';
+import Marquee from 'components/Marquee';
 import { usePixiApp, CustomPIXIComponent, Stage } from 'react-pixi-fiber';
-import AutoCarousel from './AutoCarousel';
-import './style.css';
+import AutoCarousel from 'components/AutoCarousel';
+import 'style.css';
 
 // const A = CustomPIXIComponent(
 //   {
@@ -65,11 +65,11 @@ export const App = () => {
         resolution: window.devicePixelRatio || 1,
       }}
     >
-      <Carousel width="500rem" height="320rem">
+      <Marquee width="500rem" height="320rem">
         <img src="https://via.placeholder.com/150" alt="imagem1" title="imagem1" />
         <img src="https://via.placeholder.com/150" alt="imagem2" title="imagem2" />
         <img src="https://via.placeholder.com/150" alt="imagem3" title="imagem3" />
-      </Carousel>
+      </Marquee>
 
       <AutoCarousel x={0} y={-100} />
       <AutoCarousel x={0} y={-50} />

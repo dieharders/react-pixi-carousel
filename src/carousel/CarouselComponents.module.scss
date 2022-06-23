@@ -1,3 +1,26 @@
+.wrapper {
+  height: inherit;
+  margin: auto;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  height: inherit;
+}
+
+// Navigation tabs
+
+.navContainer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: visible;
+  z-index: 100;
+}
+
 .listContainer {
   width: auto;
   margin: auto;
@@ -15,16 +38,17 @@
   height: 100%;
   opacity: 1;
 }
-.navContainer {
-  position: absolute;
-  left: 0;
-  top: 0;
-  visibility: visible;
-  z-index: 100;
-}
 
-.blurred {
-  filter: brightness(50%) blur(0.25rem);
+.vAlign {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-align: center !important;
+  -ms-flex-align: center !important;
+  align-items: center !important;
+  -webkit-box-pack: center !important;
+  -ms-flex-pack: center !important;
+  justify-content: center !important;
 }
 
 .tabContainer {
@@ -55,6 +79,7 @@
   background-color: darkgray;
   padding: 5px;
 }
+
 .inactive {
   background-color: gray;
   border-radius: 0em;
@@ -62,16 +87,4 @@
 .active {
   background-color: white;
   border-radius: 2em;
-}
-
-.vAlign {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: flex !important;
-  -webkit-box-align: center !important;
-  -ms-flex-align: center !important;
-  align-items: center !important;
-  -webkit-box-pack: center !important;
-  -ms-flex-pack: center !important;
-  justify-content: center !important;
 }
