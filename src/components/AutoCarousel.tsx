@@ -58,6 +58,7 @@ const AutoCarousel = ({ x: parentX, y: parentY }: T_ComponentProps) => {
       const poster = (
         <Poster
           key={`poster-${i}`}
+          src="https://i.imgur.com/IaUrttj.png"
           ref={posterRef}
           index={i}
           x={x}

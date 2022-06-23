@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useReducer } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useReducer } from 'react';
+import { usePixiTicker } from 'react-pixi-fiber';
 import { PREV, NEXT, INDEX } from 'carousel/CarouselComponents';
 import styles from 'carousel/CarouselComponents.module.scss';
 
@@ -48,6 +49,7 @@ const reducer = (state, { type, numItems, target }) => {
   }
 };
 
+// eslint-disable-next-line no-unused-vars
 const getOrder = ({ index, pos, numItems: itemCount }) => {
   const i = index + 1;
   let result = i - pos < 0 ? itemCount - Math.abs(i - pos) : i - pos;
@@ -55,8 +57,37 @@ const getOrder = ({ index, pos, numItems: itemCount }) => {
   return result;
 };
 
-export const useCarousel = ({ onChange, numItems, interval, children }) => {
+const onClick = ({ event, itemRef, index }) => {
+  console.log('@@ clicked', itemRef.current, index, event);
+};
+
+export const useCarousel = ({
+  onChange,
+  interval,
+  x: parentX,
+  y: parentY,
+  // height,
+  shouldBlur,
+  data,
+  slideComponent,
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [renderSlides, setRenderSlides] = useState([]);
+  const [moveAmountX, setMoveAmountX] = useState(parentX);
+  const numItems = data?.length || 0;
+  const randN = useRef(Math.random());
+  const randomIntFromInterval = (min, max) => {
+    return Math.floor(randN.current * (max - min + 1) + min);
+  };
+
+  // Update the items' state
+  const animate = useCallback((delta) => {
+    // Move the items horizontally
+    const rate = 0.05;
+    const randOffset = randomIntFromInterval(1, 100);
+    const amount = delta * rate * randOffset;
+    setMoveAmountX((prev) => prev - amount);
+  }, []);
 
   /**
    * Move carousel next/prev/specific slot
@@ -88,7 +119,7 @@ export const useCarousel = ({ onChange, numItems, interval, children }) => {
             )}
             hidden={numItems <= 1}
           >
-            {children.map((_, index) => (
+            {data.map((_, index) => (
               <div
                 key={index}
                 className={[styles.tabContainer, styles.vAlign].join(' ')}
@@ -107,6 +138,49 @@ export const useCarousel = ({ onChange, numItems, interval, children }) => {
     return null;
   };
 
+  /**
+   * @param Component ReactElement
+   */
+  const createSlides = useCallback(() => {
+    const Component = slideComponent;
+    return data.map((item, i) => {
+      // Track ref for each item
+      const posterRef = React.createRef();
+
+      // Create a poster item
+      const h = 500;
+      const imageWidth = 50; // @TODO Calc from image 150px
+      const x = parentX + i * imageWidth;
+      const y = parentY + h / 2;
+      const poster = (
+        <Component
+          key={`poster-${i}`}
+          ref={posterRef}
+          index={i}
+          src={item.src}
+          x={x}
+          y={y}
+          click={(event) => onClick({ event, index: i, itemRef: posterRef })}
+          width={imageWidth}
+          height={imageWidth}
+          // order={getOrder({ index: i, pos: state.pos, numItems })}
+          className={shouldBlur && styles.blurred}
+        />
+      );
+      return poster;
+    });
+  }, [data, parentX, parentY, shouldBlur, slideComponent]);
+
+  // Create list of slides
+  useEffect(() => {
+    const slides = createSlides();
+    console.log('@@ init slides:', slides);
+    setRenderSlides(slides);
+  }, [createSlides]);
+
+  // Update on each frame
+  usePixiTicker(animate);
+
   useEffect(() => {
     onChange && onChange(state.pos);
   }, [state.pos, onChange]);
@@ -118,16 +192,19 @@ export const useCarousel = ({ onChange, numItems, interval, children }) => {
   useEffect(() => {
     const isMultipleSources = numItems > 1;
     if (!isMultipleSources) return;
-
     const jiggleTime = Math.floor(Math.random(1) * 1000);
-    const interval = interval + jiggleTime;
+    const intrvl = interval + jiggleTime;
     const id = setTimeout(() => {
       slide(NEXT);
-    }, interval);
-
+    }, intrvl);
     return () => clearTimeout(id);
   }, [state.pos, numItems, interval, slide]);
 
   // Export hooks
-  return { slide, renderNavTabs, getOrder, state };
+  return {
+    renderNavTabs,
+    renderSlides,
+    moveAmountX,
+    state,
+  };
 };

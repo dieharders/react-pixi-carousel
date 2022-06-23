@@ -88,3 +88,7 @@
   background-color: white;
   border-radius: 2em;
 }
+
+.blurred {
+  filter: brightness(50%) blur(0.25rem);
+}

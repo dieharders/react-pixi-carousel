@@ -3,11 +3,12 @@ import { Sprite, InteractionEvent, InteractiveComponent, Text } from 'react-pixi
 import { TextStyle, Point, Texture } from 'pixi.js';
 
 interface T_ComponentProps {
+  src: string;
   x: number;
   y: number;
-  index: number;
+  index?: number;
   // eslint-disable-next-line no-unused-vars
-  click: (event: InteractionEvent) => void;
+  click?: (event: InteractionEvent) => void;
 }
 
 type T_TitleParam = {
@@ -44,15 +45,14 @@ const Title = ({ x, y, index }: T_TitleParam) => {
 
 const Poster = React.forwardRef(
   (props: T_ComponentProps, ref: React.ForwardedRef<InteractiveComponent>) => {
-    const bunnySrc = 'https://i.imgur.com/IaUrttj.png';
-    const texture = Texture.from(bunnySrc);
+    const { x, y, click, index, src } = props;
+    const texture = Texture.from(src);
     const centerAnchor = new Point(0.5, 0.5);
     const _Sprite = Sprite as React.ElementType;
-    const { x, y, click, index } = props;
 
     return (
       <>
-        <Title x={x} y={y} index={index} />
+        <Title x={x} y={y} index={index || 0} />
         <_Sprite
           ref={ref}
           anchor={centerAnchor}

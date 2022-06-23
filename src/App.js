@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useRef } from 'react';
 import { Viewport as PixiViewport } from 'pixi-viewport';
 import * as PIXI from 'pixi.js';
 import Marquee from 'components/Marquee';
 import { usePixiApp, CustomPIXIComponent, Stage } from 'react-pixi-fiber';
 import AutoCarousel from 'components/AutoCarousel';
 import 'style.css';
+import Poster from 'components/Poster';
 
 // const A = CustomPIXIComponent(
 //   {
@@ -53,6 +54,16 @@ import 'style.css';
 export const App = () => {
   const height = 500;
   const width = 500;
+  const fetchData = (n) => {
+    const arr = [];
+    for (let i = 0; i < n; i++) {
+      // const placeholder = `https://via.placeholder.com/150`;
+      const bunny = 'https://i.imgur.com/IaUrttj.png';
+      arr.push({ src: bunny });
+    }
+    return arr;
+  };
+  const data = useRef(fetchData(100));
 
   return (
     <Stage
@@ -65,17 +76,13 @@ export const App = () => {
         resolution: window.devicePixelRatio || 1,
       }}
     >
-      <Marquee width="500rem" height="320rem">
-        <img src="https://via.placeholder.com/150" alt="imagem1" title="imagem1" />
-        <img src="https://via.placeholder.com/150" alt="imagem2" title="imagem2" />
-        <img src="https://via.placeholder.com/150" alt="imagem3" title="imagem3" />
-      </Marquee>
+      <Marquee x={0} y={-100} width="500px" height="320px" data={data.current} />
 
-      <AutoCarousel x={0} y={-100} />
+      {/* <AutoCarousel x={0} y={-100} />
       <AutoCarousel x={0} y={-50} />
       <AutoCarousel x={0} y={0} />
       <AutoCarousel x={0} y={50} />
-      <AutoCarousel x={0} y={100} />
+      <AutoCarousel x={0} y={100} /> */}
 
       {/* For building a WebGL only app */}
       {/* <Viewport>

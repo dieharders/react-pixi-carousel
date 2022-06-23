@@ -2,39 +2,39 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useCarousel } from 'carousel/Carousel.hooks';
 import { Wrapper, Carousel, Slot } from 'carousel/CarouselComponents';
-import styles from 'components/Marquee.module.scss';
 
 const Marquee = (props) => {
-  const numItems = React.Children.count(props.children);
+  // const componentRef = React.createRef();
   const shouldBlur = props.shouldBlur;
-  const { state, getOrder } = useCarousel({
+  const { state, renderSlides, moveAmountX } = useCarousel({
+    x: props.x,
+    y: props.y,
+    height: props.height,
     onChange: props.onChange,
     interval: props.interval,
-    children: props.children,
-    numItems,
+    shouldBlur,
+    data: props.data,
+    slideComponent: Slot,
   });
 
   return (
-    <Wrapper width={props.width}>
-      <Carousel width={props.width} dir={state.dir} sliding={state.sliding}>
-        {props.children.map((media, index) => (
-          <Slot
-            key={index}
-            width={props.width}
-            height={props.height}
-            order={getOrder({ index: index, pos: state.pos, numItems })}
-            className={shouldBlur && styles.blurred}
-          >
-            {media}
-          </Slot>
-        ))}
-      </Carousel>
+    <Wrapper width={props.width} position={[props.x, props.y]}>
+      <Carousel
+        // ref={componentRef}
+        position={[moveAmountX, 0]}
+        width={props.width}
+        dir={state.dir}
+        sliding={state.sliding}
+        data={renderSlides}
+      />
     </Wrapper>
   );
 };
 
 Marquee.propTypes = {
-  children: PropTypes.array.isRequired,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  data: PropTypes.array.isRequired,
   width: PropTypes.string.isRequired,
   height: PropTypes.string,
   interval: PropTypes.number,
