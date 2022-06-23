@@ -49,26 +49,16 @@ const reducer = (state, { type, numItems, target }) => {
   }
 };
 
-// eslint-disable-next-line no-unused-vars
-const getOrder = ({ index, pos, numItems: itemCount }) => {
-  const i = index + 1;
-  let result = i - pos < 0 ? itemCount - Math.abs(i - pos) : i - pos;
-  if (result > itemCount - 1) result = 0;
-  return result;
-};
-
 const onClick = ({ event, itemRef, index }) => {
   console.log('@@ clicked', itemRef.current, index, event);
 };
 
 export const useCarousel = ({
-  onChange,
   interval,
   x: parentX,
   y: parentY,
-  // height,
-  shouldBlur,
   data,
+  showNav,
   slideComponent,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -109,7 +99,7 @@ export const useCarousel = ({
   /**
    * Navigation tabs
    */
-  const renderNavTabs = (showNav) => {
+  const renderNavTabs = () => {
     if (showNav) {
       return (
         <div className={styles.navContainer}>
@@ -147,9 +137,9 @@ export const useCarousel = ({
       // Track ref for each item
       const posterRef = React.createRef();
 
-      // Create a poster item
-      const h = 500;
-      const imageWidth = 50; // @TODO Calc from image 150px
+      // Create a poster item using the passed component prop
+      const imageWidth = 50; // @TODO Calc from image
+      const h = imageWidth;
       const x = parentX + i * imageWidth;
       const y = parentY + h / 2;
       const poster = (
@@ -160,16 +150,14 @@ export const useCarousel = ({
           src={item.src}
           x={x}
           y={y}
-          click={(event) => onClick({ event, index: i, itemRef: posterRef })}
           width={imageWidth}
           height={imageWidth}
-          // order={getOrder({ index: i, pos: state.pos, numItems })}
-          className={shouldBlur && styles.blurred}
+          click={(event) => onClick({ event, index: i, itemRef: posterRef })}
         />
       );
       return poster;
     });
-  }, [data, parentX, parentY, shouldBlur, slideComponent]);
+  }, [data, parentX, parentY, slideComponent]);
 
   // Create list of slides
   useEffect(() => {
@@ -180,10 +168,6 @@ export const useCarousel = ({
 
   // Update on each frame
   usePixiTicker(animate);
-
-  useEffect(() => {
-    onChange && onChange(state.pos);
-  }, [state.pos, onChange]);
 
   /**
    * Automatically move to next element
