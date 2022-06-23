@@ -1,0 +1,12 @@
+.wrapper {
+  height: inherit;
+  margin: auto;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  height: inherit;
+}

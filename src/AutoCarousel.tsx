@@ -81,6 +81,8 @@ const AutoCarousel = ({ x: parentX, y: parentY }: T_ComponentProps) => {
 
   // Update on each frame
   usePixiTicker(animate);
+
+  // Can also register a render callback like so...
   // const { ticker } = usePixiApp();
   // ticker.add(animate);
 

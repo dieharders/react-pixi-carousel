@@ -2,6 +2,7 @@
 import React from 'react';
 import { Viewport as PixiViewport } from 'pixi-viewport';
 import * as PIXI from 'pixi.js';
+import Carousel from 'Carousel';
 import { usePixiApp, CustomPIXIComponent, Stage } from 'react-pixi-fiber';
 import AutoCarousel from './AutoCarousel';
 import './style.css';
@@ -64,33 +65,11 @@ export const App = () => {
         resolution: window.devicePixelRatio || 1,
       }}
     >
-      {/* <Carousel>
-        <img
-          src="https://via.placeholder.com/150"
-          alt="imagem"
-          title="imagem"
-        />
-        <img
-          src="https://via.placeholder.com/150"
-          alt="imagem"
-          title="imagem"
-        />
-        <img
-          src="https://via.placeholder.com/150"
-          alt="imagem"
-          title="imagem"
-        />
-        <img
-          src="https://via.placeholder.com/150"
-          alt="imagem"
-          title="imagem"
-        />
-        <img
-          src="https://via.placeholder.com/150"
-          alt="imagem"
-          title="imagem"
-        />
-      </Carousel> */}
+      <Carousel width="500rem" height="320rem">
+        <img src="https://via.placeholder.com/150" alt="imagem1" title="imagem1" />
+        <img src="https://via.placeholder.com/150" alt="imagem2" title="imagem2" />
+        <img src="https://via.placeholder.com/150" alt="imagem3" title="imagem3" />
+      </Carousel>
 
       <AutoCarousel x={0} y={-100} />
       <AutoCarousel x={0} y={-50} />

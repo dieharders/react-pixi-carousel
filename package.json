@@ -7,6 +7,8 @@
     "@pixi/interaction": "6.0.2",
     "@pixi/math": "6.0.2",
     "@pixi/ticker": "6.0.2",
+    "classnames": "^2.3.1",
+    "node-sass": "^7.0.1",
     "pixi-viewport": "4.30.4",
     "pixi.js": "6.0.2",
     "prop-types": "^15.7.2",
