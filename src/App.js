@@ -31,7 +31,7 @@ export const App = () => {
     >
       <Marquee
         x={0}
-        y={50}
+        y={90}
         width={width}
         height={imageHeight}
         data={data.current}

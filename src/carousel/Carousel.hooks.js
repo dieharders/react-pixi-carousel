@@ -49,7 +49,14 @@ const reducer = (state, { type, numItems, target }) => {
   }
 };
 
-export const useCarousel = ({ x: parentX, y: parentY, data, speed, slideComponent }) => {
+export const useCarousel = ({
+  id: parentId,
+  x: parentX,
+  y: parentY,
+  data,
+  speed,
+  slideComponent,
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [renderSlides, setRenderSlides] = useState([]);
   const [isSliding, setIsSliding] = useState(false);
@@ -57,34 +64,22 @@ export const useCarousel = ({ x: parentX, y: parentY, data, speed, slideComponen
   const targetMovePos = useRef(parentX);
   const [moveSpeed, setMoveSpeed] = useState(0);
   const numItems = data?.length || 0;
-  const animTimer = useRef();
+  const imgWidth = data[0].width;
 
-  const createAnimTimer = useCallback(() => {
-    if (animTimer.current) return;
-
+  const startAnim = useCallback(() => {
     setIsSliding(true);
-
-    const imgWidth = data[0].width;
-    setMoveSpeed(imgWidth / (speed * 60));
-
-    const interval = speed * 1000;
-    const timer = setTimeout(() => {
-      console.log('@@ timeout', interval);
-      setIsSliding(false);
-      animTimer.current = null;
-    }, interval);
-
-    animTimer.current = timer;
-  }, [data, speed]);
+    const spd = speed === 0 ? 1 : speed; // Prevent divide by 0
+    setMoveSpeed(imgWidth / (spd * 60));
+  }, [speed, imgWidth]);
 
   // When item is clicked
   const onClick = useCallback(
     ({ event, itemRef, index }) => {
       console.log('@@ clicked', itemRef.current, index, event);
       // Start Animation
-      createAnimTimer();
+      startAnim();
     },
-    [createAnimTimer],
+    [startAnim],
   );
 
   // Move the items horizontally
@@ -92,23 +87,35 @@ export const useCarousel = ({ x: parentX, y: parentY, data, speed, slideComponen
     (delta) => {
       const amount = delta * moveSpeed;
       setPosX((prev) => {
-        const bufferAmount = 5;
-        if (Math.abs(targetMovePos.current) - Math.abs(prev) >= bufferAmount)
+        // Move item with immediately if speed=0
+        if (speed === 0 && Math.abs(prev) <= Math.abs(targetMovePos.current)) {
+          console.log('@@ stopped');
+          setIsSliding(false);
+
           return targetMovePos.current;
+        }
+        // Ensure perfect alignment
+        if (Math.abs(prev) >= Math.abs(targetMovePos.current)) {
+          setIsSliding(false);
+          return targetMovePos.current;
+        }
+        // Move item smoothly
         return prev - amount;
       });
     },
-    [moveSpeed],
+    [moveSpeed, speed],
   );
 
   // Update the items state
   const onTick = useCallback(
     (delta) => {
       if (isSliding) animate(delta);
+      if (!isSliding) targetMovePos.current = posX - imgWidth;
     },
-    [animate, isSliding],
+    [isSliding, animate, posX, imgWidth],
   );
 
+  // @TODO Use this logic to drive animation and track state
   /**
    * Move carousel next/prev/specific slot
    * @param {string} dir
@@ -142,7 +149,7 @@ export const useCarousel = ({ x: parentX, y: parentY, data, speed, slideComponen
       const y = h / 2;
       const poster = (
         <Component
-          key={`poster-${i}`}
+          key={`${parentId}-poster-${i}`}
           ref={posterRef}
           index={i}
           src={item.src}
@@ -155,7 +162,7 @@ export const useCarousel = ({ x: parentX, y: parentY, data, speed, slideComponen
       );
       return poster;
     });
-  }, [data, onClick, slideComponent]);
+  }, [data, onClick, parentId, slideComponent]);
 
   // Create list of slides
   useEffect(() => {
@@ -163,14 +170,6 @@ export const useCarousel = ({ x: parentX, y: parentY, data, speed, slideComponen
     console.log('@@ init slides:', slides);
     setRenderSlides(slides);
   }, [createSlides]);
-
-  // useEffect(() => {
-  //   if (isSliding) {
-  //     const imgWidth = data[0].width;
-  //     targetMovePos.current = posX - imgWidth;
-  //     console.log('@@ aaahhh');
-  //   }
-  // }, [data, posX, isSliding]);
 
   // Update on each frame
   usePixiTicker(onTick);

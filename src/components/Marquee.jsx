@@ -4,8 +4,10 @@ import { usePixiApp } from 'react-pixi-fiber';
 import { useCarousel } from 'carousel/Carousel.hooks';
 import { Wrapper, Carousel, Slot } from 'carousel/Carousel.components';
 
-const Marquee = ({ x, y, width, height, data, speed }) => {
+// @TODO Not playing nice with multiple instances
+const Marquee = ({ id, x, y, width, height, data, speed }) => {
   const { renderSlides, posX } = useCarousel({
+    id,
     x,
     y,
     width,
