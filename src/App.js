@@ -6,11 +6,13 @@ import 'style.css';
 export const App = () => {
   const height = 500;
   const width = 500;
+  const imageWidth = 125;
+  const imageHeight = 125;
   const fetchData = (n) => {
     const arr = [];
     for (let i = 0; i < n; i++) {
-      const src = 'https://i.imgur.com/IaUrttj.png';
-      arr.push({ src });
+      const src = `https://picsum.photos/${imageWidth}/${imageHeight}`;
+      arr.push({ src, width: imageWidth, height: imageHeight });
     }
     return arr;
   };
@@ -27,7 +29,14 @@ export const App = () => {
         resolution: window.devicePixelRatio || 1,
       }}
     >
-      <Marquee x={0} y={50} width={width} height={100} data={data.current} />
+      <Marquee
+        x={0}
+        y={50}
+        width={width}
+        height={imageHeight}
+        data={data.current}
+        speed={1}
+      />
     </Stage>
   );
 };

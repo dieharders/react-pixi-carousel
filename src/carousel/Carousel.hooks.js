@@ -1,7 +1,7 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useCallback, useEffect, useRef, useReducer } from 'react';
 import { usePixiTicker } from 'react-pixi-fiber';
 import { PREV, NEXT, INDEX } from 'carousel/Carousel.components';
-import styles from 'carousel/Carousel.components.module.scss';
 
 const initialState = { pos: 0, sliding: false, dir: NEXT };
 
@@ -49,35 +49,65 @@ const reducer = (state, { type, numItems, target }) => {
   }
 };
 
-const onClick = ({ event, itemRef, index }) => {
-  console.log('@@ clicked', itemRef.current, index, event);
-};
-
-export const useCarousel = ({
-  interval,
-  x: parentX,
-  y: parentY,
-  data,
-  showNav,
-  slideComponent,
-}) => {
+export const useCarousel = ({ x: parentX, y: parentY, data, speed, slideComponent }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [renderSlides, setRenderSlides] = useState([]);
-  const [moveAmountX, setMoveAmountX] = useState(parentX);
+  const [isSliding, setIsSliding] = useState(false);
+  const [posX, setPosX] = useState(parentX);
+  const targetMovePos = useRef(parentX);
+  const [moveSpeed, setMoveSpeed] = useState(0);
   const numItems = data?.length || 0;
-  const randN = useRef(Math.random());
-  const randomIntFromInterval = (min, max) => {
-    return Math.floor(randN.current * (max - min + 1) + min);
-  };
+  const animTimer = useRef();
 
-  // Update the items' state
-  const animate = useCallback((delta) => {
-    // Move the items horizontally
-    const rate = 0.05;
-    const randOffset = randomIntFromInterval(1, 100);
-    const amount = delta * rate * randOffset;
-    setMoveAmountX((prev) => prev - amount);
-  }, []);
+  const createAnimTimer = useCallback(() => {
+    if (animTimer.current) return;
+
+    setIsSliding(true);
+
+    const imgWidth = data[0].width;
+    setMoveSpeed(imgWidth / (speed * 60));
+
+    const interval = speed * 1000;
+    const timer = setTimeout(() => {
+      console.log('@@ timeout', interval);
+      setIsSliding(false);
+      animTimer.current = null;
+    }, interval);
+
+    animTimer.current = timer;
+  }, [data, speed]);
+
+  // When item is clicked
+  const onClick = useCallback(
+    ({ event, itemRef, index }) => {
+      console.log('@@ clicked', itemRef.current, index, event);
+      // Start Animation
+      createAnimTimer();
+    },
+    [createAnimTimer],
+  );
+
+  // Move the items horizontally
+  const animate = useCallback(
+    (delta) => {
+      const amount = delta * moveSpeed;
+      setPosX((prev) => {
+        const bufferAmount = 5;
+        if (Math.abs(targetMovePos.current) - Math.abs(prev) >= bufferAmount)
+          return targetMovePos.current;
+        return prev - amount;
+      });
+    },
+    [moveSpeed],
+  );
+
+  // Update the items state
+  const onTick = useCallback(
+    (delta) => {
+      if (isSliding) animate(delta);
+    },
+    [animate, isSliding],
+  );
 
   /**
    * Move carousel next/prev/specific slot
@@ -97,38 +127,6 @@ export const useCarousel = ({
   );
 
   /**
-   * Navigation tabs
-   */
-  const renderNavTabs = () => {
-    if (showNav) {
-      return (
-        <div className={styles.navContainer}>
-          <ul
-            className={[styles.listContainer, numItems > 1 ? styles.vAlign : ''].join(
-              ' ',
-            )}
-            hidden={numItems <= 1}
-          >
-            {data.map((_, index) => (
-              <div
-                key={index}
-                className={[styles.tabContainer, styles.vAlign].join(' ')}
-                onClick={() => slide(INDEX, index)}
-              >
-                <li
-                  key={index}
-                  className={state.pos === index ? styles.active : styles.inactive}
-                />
-              </div>
-            ))}
-          </ul>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  /**
    * @param Component ReactElement
    */
   const createSlides = useCallback(() => {
@@ -138,10 +136,10 @@ export const useCarousel = ({
       const posterRef = React.createRef();
 
       // Create a poster item using the passed component prop
-      const imageWidth = 50; // @TODO Calc from image
+      const imageWidth = item.width;
       const h = imageWidth;
-      const x = parentX + i * imageWidth;
-      const y = parentY + h / 2;
+      const x = i * imageWidth;
+      const y = h / 2;
       const poster = (
         <Component
           key={`poster-${i}`}
@@ -157,7 +155,7 @@ export const useCarousel = ({
       );
       return poster;
     });
-  }, [data, parentX, parentY, slideComponent]);
+  }, [data, onClick, slideComponent]);
 
   // Create list of slides
   useEffect(() => {
@@ -166,29 +164,35 @@ export const useCarousel = ({
     setRenderSlides(slides);
   }, [createSlides]);
 
+  // useEffect(() => {
+  //   if (isSliding) {
+  //     const imgWidth = data[0].width;
+  //     targetMovePos.current = posX - imgWidth;
+  //     console.log('@@ aaahhh');
+  //   }
+  // }, [data, posX, isSliding]);
+
   // Update on each frame
-  usePixiTicker(animate);
+  usePixiTicker(onTick);
 
   /**
    * Automatically move to next element
    * Watch `state.pos` for state changes
    */
-  useEffect(() => {
-    const isMultipleSources = numItems > 1;
-    if (!isMultipleSources) return;
-    const jiggleTime = Math.floor(Math.random(1) * 1000);
-    const intrvl = interval + jiggleTime;
-    const id = setTimeout(() => {
-      slide(NEXT);
-    }, intrvl);
-    return () => clearTimeout(id);
-  }, [state.pos, numItems, interval, slide]);
+  // useEffect(() => {
+  //   const isMultipleSources = numItems > 1;
+  //   if (!isMultipleSources) return;
+  //   const intrvl = 5000;
+  //   const id = setTimeout(() => {
+  //     slide(NEXT);
+  //   }, intrvl);
+  //   return () => clearTimeout(id);
+  // }, [state.pos, numItems, slide]);
 
   // Export hooks
   return {
-    renderNavTabs,
     renderSlides,
-    moveAmountX,
+    posX,
     state,
   };
 };

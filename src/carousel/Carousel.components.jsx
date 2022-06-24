@@ -89,22 +89,22 @@ const Title = ({ x, y, index }) => {
 export const Slot = React.forwardRef((props, ref) => {
   const { x, y, click, index, src, width, height } = props;
   const texture = Texture.from(src);
-  const centerAnchor = new Point(0.5, 0.5);
+  const centerAnchor = new Point(0, 0.5);
 
   return (
     <>
-      <Title x={x} y={y} index={index || 0} />
       <Sprite
         ref={ref}
-        anchor={centerAnchor}
-        texture={texture}
         x={x}
         y={y}
+        anchor={centerAnchor}
+        texture={texture}
         width={width}
         height={height}
         interactive
         click={click}
       />
+      <Title x={x - width / 2} y={y} index={index || 0} />
     </>
   );
 });
