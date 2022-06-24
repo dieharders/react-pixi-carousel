@@ -4,7 +4,7 @@ import { usePixiApp } from 'react-pixi-fiber';
 import { useCarousel } from 'carousel/Carousel.hooks';
 import { Wrapper, Carousel, Slot } from 'carousel/Carousel.components';
 
-// @TODO Not playing nice with multiple instances
+// @TODO Not playing nice with multiple instances. Perhaps using the dispatch actions to a target id would solve?
 const Marquee = ({ id, x, y, width, height, data, speed }) => {
   const { renderSlides, posX } = useCarousel({
     id,
@@ -20,7 +20,7 @@ const Marquee = ({ id, x, y, width, height, data, speed }) => {
   const { width: screenWidth } = screen;
 
   useEffect(() => {
-    console.log('@@ screenWidth', screenWidth);
+    console.log('@@ Marquee created:', screenWidth);
   }, [screenWidth]);
 
   return (
@@ -36,11 +36,6 @@ Marquee.propTypes = {
   data: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  showNav: PropTypes.bool,
-};
-
-Marquee.defaultProps = {
-  showNav: false,
 };
 
 export default Marquee;

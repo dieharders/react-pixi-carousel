@@ -1,20 +1,12 @@
 import React from 'react';
 import { Container, Sprite, Text } from 'react-pixi-fiber';
 import { TextStyle, Point, Texture } from 'pixi.js';
-// import classNames from 'classnames';
-// import styles from 'carousel/Carousel.components.module.scss';
 
 export const NEXT = 'NEXT';
 export const PREV = 'PREV';
 export const INDEX = 'INDEX';
 
 export const Wrapper = (props) => {
-  // @TODO Refactor these styling to work with Pixi components
-
-  // const { width } = props;
-  // const wrapperStyle = { width };
-  // return <div className={classNames(styles.wrapper)} style={wrapperStyle}></div>;
-
   return (
     <Container {...props}>
       {/* Background color */}
@@ -31,34 +23,8 @@ export const Wrapper = (props) => {
 };
 
 export const Carousel = (props) => {
-  // @TODO Refactor these styling and logic to work with Pixi components
-
-  // const { dir, width, sliding } = props;
-  // const calcTransform = () => {
-  //   if (children.length <= 1) return 'translateX(0%)';
-  //   if (!sliding) return 'translateX(-100%)';
-  //   if (dir === INDEX) return 'translateX(-100%)';
-  //   if (dir === NEXT) return 'translateX(0%)';
-  //   if (dir === PREV) return 'translateX(-200%)';
-  //   return 'translateX(-100%)';
-  // };
-  // const carouselStyle = {
-  //   width,
-  //   transition: sliding ? 'none' : 'transform 400ms ease',
-  //   transform: calcTransform(),
-  // };
-
-  // return <div className={classNames(styles.container)} style={carouselStyle}></div>;
-
   return <Container {...props}>{props.data}</Container>;
 };
-
-// @TODO Refactor these styling to work with Pixi components
-
-// export const Slot = ({ width, height, order }) => {
-//   const slotStyle = { width, height, order, '-webkit-order': order };
-//   return <div style={slotStyle}></div>;
-// };
 
 const Title = ({ x, y, index }) => {
   const _Text = Text;

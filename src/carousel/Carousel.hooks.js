@@ -167,7 +167,7 @@ export const useCarousel = ({
   // Create list of slides
   useEffect(() => {
     const slides = createSlides();
-    console.log('@@ init slides:', slides);
+    console.log('@@ Created slides:', slides);
     setRenderSlides(slides);
   }, [createSlides]);
 
